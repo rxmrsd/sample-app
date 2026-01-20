@@ -47,11 +47,19 @@ func main() {
 	r.HandleFunc("/api/todos/{id}", deleteTodo).Methods("DELETE")
 	r.HandleFunc("/api/health", healthCheck).Methods("GET")
 
+	allowedOrigins := os.Getenv("ALLOWED_ORIGINS")
+	var origins []string
+	if allowedOrigins != "" {
+		origins = []string{allowedOrigins}
+	} else {
+		origins = []string{"*"}
+	}
+
 	c := cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:3000", "http://localhost:5173"},
+		AllowedOrigins:   origins,
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
 		AllowedHeaders:   []string{"Content-Type"},
-		AllowCredentials: true,
+		AllowCredentials: false,
 	})
 
 	handler := c.Handler(r)

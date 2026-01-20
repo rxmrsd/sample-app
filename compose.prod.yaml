@@ -5,8 +5,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: todoapp
-    ports:
-      - "5432:5432"
+    expose:
+      - "5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -17,8 +17,8 @@ services:
 
   backend:
     build: ./backend
-    ports:
-      - "8080:8080"
+    expose:
+      - "8080"
     environment:
       DATABASE_URL: postgres://postgres:postgres@db:5432/todoapp?sslmode=disable
       PORT: "8080"
@@ -31,8 +31,8 @@ services:
       context: ./frontend
       args:
         VITE_API_URL: ${VITE_API_URL:-http://localhost:8080}
-    ports:
-      - "3000:80"
+    expose:
+      - "80"
     depends_on:
       - backend
 
